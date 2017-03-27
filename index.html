@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Using SVGs in WordPress</title>
+
+		<meta name="description" content="This presentation details several aspects of integrating Scalable Vector Graphics (SVG) into WordPress sites.">
+		<meta name="author" content="James Steinbach">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Using SVGs in WordPress</h1>
+					<p>CMN Designer/Developer Conversation</p>
+				</section>
+
+				<section>
+					<h2>Why Use SVGs?</h2>
+					<ul>
+					<li><b>Vector:</b> retina without _2x files</li>
+					<li><b>Lightweight:</b> file tells browser how to draw shapes, not long, unreadable lists of raw pixel data</li>
+					<li><b>CSS:</b> live style modifications</li>
+					<li><b>SVG > icon fonts:</b> user font-disabling, quality, load time: <b><a href="http://jds.li/c">jds.li/c</a></b></li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>Generating SVGs</h2>
+					</section>
+
+					<section>
+						<h3>Copy-Paste from Illustrator</h3>
+						<ul>
+							<li>Select group &amp; copy</li>
+							<li>Open Sublime Text new file</li>
+							<li><strike>Profit!!</strike> Paste!!</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Export from Illustrator</h3>
+						<ul>
+							<li>Create artboards around each group (no background)</li>
+							<li>Save As&hellip;</li>
+							<li>Format: SVG</li>
+							<li>Check: Use Artboards</li>
+							<li><b><a href="http://jds.li/b">jds.li/b</a></b></li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Other Issues</h3>
+						<ul>
+							<li><b>Icon font characters?</b><br> Type -&gt; Create Outlines</li>
+							<li><b>Multiple Icons?</b><br> Save as individual files: not sprite sheets</li>
+							<li><b>Colors?</b><br> Shapes should be filled and/or stroked with most frequently used color: we can change color for edge cases with CSS</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Optimizing SVGs</h2>
+						<p><b>Nobody does a thing!</b><br>Our front-end Gulp script does it all for us!</p>
+						<!-- <p class="fragment"><img src="http://cdn.meme.am/images/100x100/5018883.jpg" alt="Fist Pump Baby"></p> -->
+					</section>
+					<section data-background="//c2.staticflickr.com/2/1243/1285612321_8cc0c9a461_b.jpg"></section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Using SVGs in WordPress</h2>
+					</section>
+
+					<section>
+						<h3>Upload to Media Library</h3>
+						<p>Images can not optimized by the Gulp script &ndash; we&apos;d need to be optimized ahead of time:</p>
+						<ul>
+							<li><b>Online:</b> <a href="http://jds.li/d">SVGOMG &ndash; <b>jds.li/d</b></a></li>
+							<li><b>Desktop:</b> <a href="http://jds.li/e">SVGO GUI &ndash; <b>jds.li/e</b></a></li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Use in theme <code>/img/</code> directory</h3>
+						<p>Images are optimized by script, but inaccessible to Design/Marketing/Content.</p>
+					</section>
+
+					<section data-background="/cmn-dmc.jpg"></section>
+
+					<section>
+						<h3>Developers:</h3>
+						<p>The <code>get_svg()</code> function makes SVG markup available to be inlined in page content</p>
+						<pre><code>
+&lt;?php
+	echo '&lt;a class="icon-button" href="/page/">' . get_svg( 'icon-name' ) . 'Click Me&lt;/a&gt;';
+?&gt;
+						</code></pre>
+					</section>
+
+					<section>
+						<h3>Developers:</h3>
+						<p>Elements inside inline SVGs can be styled with CSS properties and respond to media queries &amp; hover interactions</p>
+						<pre><code>
+.icon-button {
+	g, path, polygon, rect, circle {
+		fill: $color-primary;
+
+		&:hover,
+		&:active,
+		&:focus {
+			fill: $color-primary-dark;
+		}
+	}
+}
+						</code></pre>
+
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				width: 840,
+
+				transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					// { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					// { src: 'plugin/zoom-js/zoom.js', async: true }
+				]
+
+			});
+
+		</script>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-43397146-5', 'auto'); ga('send', 'pageview');
+		</script>
+
+	</body>
+</html>
